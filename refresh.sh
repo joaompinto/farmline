@@ -5,3 +5,4 @@ rm -rf common
 cp -va $SOURCE_DIR/common .
 cp -vp $SOURCE_DIR/web/{*.html,*.css,*.dart,*.js} web
 cp -vp $SOURCE_DIR/packages/browser/dart.js web/packages/browser
+~/dart/dart-sdk/bin/dart2js  -o web/farmline.dart.js ../farmline/web/farmline.dart -m
