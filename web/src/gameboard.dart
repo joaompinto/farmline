@@ -6,13 +6,19 @@ const GRID_COLS = 8;   // grid columns
 const GRID_WIDTH = 60;  // grid cell width
 const GRID_HEIGHT = 60; // grid cell height
 
+
+
 // game states
 const WAITING = 0;      // Waiting for player move
 const PUSHING = 1;      // Player is pushing a product
 const SWITCHING = 2;    // Products are being switched
 const IMPLODING = 3;    // Product lines beng imploded
 
+// The higher the longer the products take to drop
+const DROP_TIME = 0.2;
+
 class GameBoard extends DisplayObjectContainer {
+
 
   ResourceManager _resourceManager;
   Juggler _juggler;
@@ -160,11 +166,13 @@ class GameBoard extends DisplayObjectContainer {
     }
   }
 
-  void dropProduct(x1, y1, x2, y2) {
+  // Sart the drop animation - animation time depends on how many cols to drop
+  // Move a product to it's destination after dropping
+  void dropProduct(x1, y1, x2, y2, col_drop_count) {
     ++dropping_products;
     Product product = getGrid(x1, y1);
     setGrid(x1, y1, null);
-    var tween = new Tween(product, 0.5, TransitionFunction.linear)
+    var tween = new Tween(product, DROP_TIME*col_drop_count, TransitionFunction.linear)
       ..animate.y.to(y2*GRID_HEIGHT)
       ..onComplete = () => onDropProductComplete(product);
     _juggler.add(tween);
@@ -201,10 +209,11 @@ class GameBoard extends DisplayObjectContainer {
             continue;
         }
         if(col_drop_count > 0) { // Holes below, drop it
-          dropProduct(x, y, x, y+col_drop_count);
+          dropProduct(x, y, x, y+col_drop_count, col_drop_count);
         }
       }
-      // Drop more from the top
+      
+      // Drop from the top - animation time depends on how many cols to drop      
       for(int i=0; i<col_drop_count; ++i) {
         ++dropping_products;
         int face_id = 1 + _rng.nextInt(7);
@@ -214,7 +223,7 @@ class GameBoard extends DisplayObjectContainer {
           ..x = x*GRID_WIDTH
           ..y = -(i+1)*GRID_HEIGHT;
         this.addChild(product);
-        var tween = new Tween(product, 0.5, TransitionFunction.linear)
+        var tween = new Tween(product, DROP_TIME*col_drop_count, TransitionFunction.linear)
           ..animate.y.to((col_drop_count-i-1)*GRID_HEIGHT)
           ..onComplete = () => onDropProductComplete(product);
         _juggler.add(tween);
