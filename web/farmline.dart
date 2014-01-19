@@ -62,7 +62,16 @@ void loadResources() {
    }
 
   resourceManager.load().then((res) {
+    stage.removeChild(loadingBitmap);
+    stage.removeChild(loadingTextField);
+    stage.juggler.remove(loadingBitmapTween);
+    
     var gameBoard = new GameBoard(resourceManager, stage.juggler);
     stage.addChild(gameBoard);
-  });
+  }).catchError((error) {
+
+    for(var resource in resourceManager.failedResources) {
+      print("Loading resouce failed: ${resource.kind}.${resource.name} - ${resource.error}");
+    }
+  });  
 }

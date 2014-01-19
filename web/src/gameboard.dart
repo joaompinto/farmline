@@ -1,8 +1,8 @@
 /* */
 part of farmline;
 
-const GRID_ROWS = 10;   // grid rows
-const GRID_COLS = 10;   // grid columns
+const GRID_ROWS = 8;   // grid rows
+const GRID_COLS = 8;   // grid columns
 const GRID_WIDTH = 60;  // grid cell width
 const GRID_HEIGHT = 60; // grid cell height
 
@@ -31,6 +31,7 @@ class GameBoard extends DisplayObjectContainer {
   List _hLines = new List(); // List of horizontal lines to be imploded
   List _vLines = new List();  // List of vertical lines to be imploded
   int dropping_products = 0;
+  int implodding_count = 0;
   var _rng  = new math.Random();
   
   GameBoard(ResourceManager resourceManager, Juggler juggler) {
@@ -155,8 +156,7 @@ class GameBoard extends DisplayObjectContainer {
       if(implode_count == 0) { // No implode generated, switch back products
         startSwitch(moveEnd.x, moveEnd.y, moveStart.x, moveStart.y, false);
       } else
-        if(implodeLines() > 0)
-          dropProducts();
+        implodeLines();
     }
   }
 
@@ -174,12 +174,12 @@ class GameBoard extends DisplayObjectContainer {
     int x = product.x  ~/ GRID_WIDTH;
     int y = product.y  ~/  GRID_HEIGHT;
     setGrid(x, y, product);
+    // If nothing more is dropping
     if(--dropping_products == 0) {
-      if(implodeLines() > 0)
-        dropProducts();
-      else {
+      // Check for new lines to be imploded
+      if(implodeLines() == 0)
+        // Set game for next play
         gameState = WAITING;
-      }
     }
   }
 
@@ -222,39 +222,57 @@ class GameBoard extends DisplayObjectContainer {
     }
   }
 
-  void implodeHLine(element) {
-    int y = element[0];
-    int x = element[1];
-    int len = element[2];
-    print("Imploding line $element");
-    for(int i=0; i < len; i++) {
-      Product product = getGrid(x+i, y);
-      setGrid(x+i, y, null);
-      removeChild(product);
-    }
+  void onImplodeProductComplete(product) {
+    removeChild(product);
+    if(--implodding_count == 0)
+      dropProducts();
   }
 
-  void implodeVLine(element) {
-    int x = element[0];
-    int y = element[1];
-    int len = element[2];
-    print("Imploding line $element");
-    for(int i=0; i < len; i++) {      
-      Product product = getGrid(x, y+i);
-      if(product == null ) // product crossing a V and H line
-        continue;
-      setGrid(x, y+i, null);
-      removeChild(product);
-    }
-  }
-
+  // Implode lines previous identified by _identify_imploding_products()
   int implodeLines() {
+    
+    void implode_product(x,y) {
+      implodding_count++;
+      Product product = getGrid(x, y);
+      setGrid(x, y, null);      
+      //removeChild(product);
+      var tween = new Tween(product, 0.6, TransitionFunction.linear)
+        //..animate.alpha.to(0)
+        ..animate.x.to(x*GRID_WIDTH+GRID_WIDTH/2)
+        ..animate.y.to(y*GRID_HEIGHT+GRID_HEIGHT/2)
+        ..animate.scaleX.to(0)
+        ..animate.scaleY.to(0)
+        ..onComplete = () => onImplodeProductComplete(product);
+        ;
+      _juggler.add(tween);        
+    }
+
     int count = _identify_imploding_products();
     gameState = IMPLODING;
-    for(final element in _hLines)
-        implodeHLine(element);
-    for(final element in _vLines)
-        implodeVLine(element);
+    
+    // Implode horizontal lines
+    for(final element in _hLines) {
+      int y = element[0];
+      int x = element[1];
+      int len = element[2];
+      print("Imploding line $element");
+      for(int i=0; i < len; i++) {
+        implode_product(x+i, y);
+      }
+      
+    }
+    for(final element in _vLines) {
+      int x = element[0];
+      int y = element[1];
+      int len = element[2];
+      print("Imploding line $element");
+      for(int i=0; i < len; i++) {      
+        Product product = getGrid(x, y+i);
+        if(product == null ) // product crossing a V and H line
+          continue;
+        implode_product(x, y+i);
+      }      
+    }
     return count;
   }
 
