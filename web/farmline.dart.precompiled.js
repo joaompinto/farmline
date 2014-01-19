@@ -4219,7 +4219,7 @@ w=this.ft
 w.h(w,t)
 w=this.ft
 w.h(w,s)},
-qy:function(a,b,c,d){var z,y,x,w,v
+xe:function(a,b,c,d,e){var z,y,x,w,v
 this.qI=this.qI+1
 z=this.ML
 y=a+b*8
@@ -4231,7 +4231,7 @@ y.$builtinTypeInfo=[Z.O2]
 w=new Z.J3(x,Z.mh(),y,null,null,null,0,0,0,!1,!1)
 z=J.x(x)
 if(typeof x!=="object"||x===null||!z.$isfE)H.vh(new P.AT("displayObject"))
-w.kK=P.y(0.0001,0.5)
+w.kK=P.y(0.0001,0.2*e)
 v=new Z.O2(x,1,0/0,0/0,0/0)
 y.push(v)
 v.Rt=C.jn.Hp(d*60)
@@ -4246,46 +4246,46 @@ z[y]=a
 z=this.qI-1
 this.qI=z
 if(z===0)if(this.SD()===0)this.J6=0},
-iY:function(){var z,y,x,w,v,u,t,s,r,q,p,o,n,m,l,k,j,i
+iY:function(){var z,y,x,w,v,u,t,s,r,q,p,o,n,m,l,k,j,i,h
 C.Nm.sB(this.Ms,0)
 for(z=this.Kt,y=this.ML,x=y.length,w=0;w<8;++w){for(v=0,u=7;u>-1;--u){t=w+u*8
 if(t<0||t>=x)return H.e(y,t)
 if(y[t]==null){++v
-continue}if(v>0)this.qy(w,u,w,u+v)}for(t=w*60,s=0;s<v;s=k){this.qI=this.qI+1
-r=1+z.j1(7)
-q=this.UP.QE("BitmapData","product_"+r)
-p=J.x(q)
-p=typeof q==="object"&&q!==null&&!!p.$isod
-if(!p)H.vh("dart2js_hint")
-o=$.LS
-$.LS=o+1
-n=new K.dh(null,null,r,null,null,null,o,0,0,0,0,1,1,0,0,0,1,!0,!1,null,null,null,!1,null,null,null,"",null,new Z.yW(1,0,0,1,0,0,1),new Z.yW(1,0,0,1,0,0,1),!0,null,null)
-if(q==null)n.ud=null
-if(p)n.ud=q
-n.P6="auto"
-n.B3=null
-n.sHs(1)
-m=n.gR(n)
-n.sHs(m!==0?58/m:1)
-n.sNe(1)
-l=n.gfg(n)
-n.sNe(l!==0?58/l:1)
-n.vX=t
-n.xv=!0
-k=s+1
-n.iC=-k*60
-n.xv=!0
-this.bS(n)
-p=[]
-p.$builtinTypeInfo=[Z.O2]
-j=new Z.J3(n,Z.mh(),p,null,null,null,0,0,0,!1,!1)
-j.kK=P.y(0.0001,0.5)
-i=new Z.O2(n,1,0/0,0/0,0/0)
-p.push(i)
-i.Rt=C.jn.Hp((v-s-1)*60)
-j.ri=new K.dM(this,n)
-p=this.ft
-p.h(p,j)}}},
+continue}if(v>0)this.xe(w,u,w,u+v,v)}for(t=0.2*v,s=w*60,r=0;r<v;r=j){this.qI=this.qI+1
+q=1+z.j1(7)
+p=this.UP.QE("BitmapData","product_"+q)
+o=J.x(p)
+o=typeof p==="object"&&p!==null&&!!o.$isod
+if(!o)H.vh("dart2js_hint")
+n=$.LS
+$.LS=n+1
+m=new K.dh(null,null,q,null,null,null,n,0,0,0,0,1,1,0,0,0,1,!0,!1,null,null,null,!1,null,null,null,"",null,new Z.yW(1,0,0,1,0,0,1),new Z.yW(1,0,0,1,0,0,1),!0,null,null)
+if(p==null)m.ud=null
+if(o)m.ud=p
+m.P6="auto"
+m.B3=null
+m.sHs(1)
+l=m.gR(m)
+m.sHs(l!==0?58/l:1)
+m.sNe(1)
+k=m.gfg(m)
+m.sNe(k!==0?58/k:1)
+m.vX=s
+m.xv=!0
+j=r+1
+m.iC=-j*60
+m.xv=!0
+this.bS(m)
+o=[]
+o.$builtinTypeInfo=[Z.O2]
+i=new Z.J3(m,Z.mh(),o,null,null,null,0,0,0,!1,!1)
+i.kK=P.y(0.0001,t)
+h=new Z.O2(m,1,0/0,0/0,0/0)
+o.push(h)
+h.Rt=C.jn.Hp((v-r-1)*60)
+i.ri=new K.dM(this,m)
+o=this.ft
+o.h(o,i)}}},
 SD:function(){var z,y,x,w,v,u,t,s,r,q,p,o,n,m
 z=new K.oo(this)
 y=this.Sa()
