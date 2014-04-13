@@ -3,8 +3,8 @@ part of farmline;
 
 const GRID_ROWS = 8;   // grid rows
 const GRID_COLS = 8;   // grid columns
-const GRID_WIDTH = 60;  // grid cell width
-const GRID_HEIGHT = 60; // grid cell height
+const GRID_WIDTH = 64;  // grid cell width
+const GRID_HEIGHT = 64; // grid cell height
 
 
 
@@ -14,8 +14,8 @@ const PUSHING = 1;      // Player is pushing a product
 const SWITCHING = 2;    // Products are being switched
 const IMPLODING = 3;    // Product lines beng imploded
 
-// The higher the longer the products take to drop
-const DROP_TIME = 0.2;
+const DROP_DURATION = 0.15;
+const IMPLOSION_DURATION = 0.8;
 
 class GameBoard extends DisplayObjectContainer {
 
@@ -54,10 +54,10 @@ class GameBoard extends DisplayObjectContainer {
       for(int x=0; x < GRID_ROWS; ++x) {
         for(int y=0; y < GRID_COLS; ++y) {
           int face_id = 1 + _rng.nextInt(7);
-          Product product = new Product(resourceManager.getBitmapData('product_$face_id'),face_id)
-           ..width = GRID_WIDTH - 2
-           ..height = GRID_HEIGHT - 2
-           ..x = x*GRID_WIDTH; product.y = y*GRID_HEIGHT;
+          BitmapData bitmap = resourceManager.getBitmapData('product_$face_id');
+          Product product = new Product(bitmap,face_id)
+           ..x = x*GRID_WIDTH
+           ..y = y*GRID_HEIGHT;
           setGrid(x, y, product);         
           addChild(product);
         }
@@ -172,7 +172,7 @@ class GameBoard extends DisplayObjectContainer {
     ++dropping_products;
     Product product = getGrid(x1, y1);
     setGrid(x1, y1, null);
-    var tween = new Tween(product, DROP_TIME*col_drop_count, TransitionFunction.linear)
+    var tween = new Tween(product, DROP_DURATION*col_drop_count, TransitionFunction.linear)
       ..animate.y.to(y2*GRID_HEIGHT)
       ..onComplete = () => onDropProductComplete(product);
     _juggler.add(tween);
@@ -218,12 +218,10 @@ class GameBoard extends DisplayObjectContainer {
         ++dropping_products;
         int face_id = 1 + _rng.nextInt(7);
         Product product = new Product(_resourceManager.getBitmapData('product_$face_id'),face_id)
-          ..width = GRID_WIDTH-2
-          ..height = GRID_HEIGHT-2
           ..x = x*GRID_WIDTH
           ..y = -(i+1)*GRID_HEIGHT;
         this.addChild(product);
-        var tween = new Tween(product, DROP_TIME*col_drop_count, TransitionFunction.linear)
+        var tween = new Tween(product, DROP_DURATION*col_drop_count, TransitionFunction.linear)
           ..animate.y.to((col_drop_count-i-1)*GRID_HEIGHT)
           ..onComplete = () => onDropProductComplete(product);
         _juggler.add(tween);
@@ -245,10 +243,11 @@ class GameBoard extends DisplayObjectContainer {
       Product product = getGrid(x, y);
       setGrid(x, y, null);      
       //removeChild(product);
-      var tween = new Tween(product, 0.6, TransitionFunction.linear)
-        //..animate.alpha.to(0)
-        ..animate.x.to(x*GRID_WIDTH+GRID_WIDTH/2)
-        ..animate.y.to(y*GRID_HEIGHT+GRID_HEIGHT/2)
+      var tween = new Tween(product, IMPLOSION_DURATION, TransitionFunction.easeInBack)
+        //..animate.rotation.by(5)
+        ..animate.alpha.to(0)
+        ..animate.x.to((x*GRID_WIDTH+GRID_WIDTH/2) )//+200-_rng.nextInt(400))
+        ..animate.y.to((y*GRID_HEIGHT+GRID_HEIGHT/2) )//+200-_rng.nextInt(400))
         ..animate.scaleX.to(0)
         ..animate.scaleY.to(0)
         ..onComplete = () => onImplodeProductComplete(product);
