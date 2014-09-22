@@ -6,6 +6,7 @@ import 'package:stagexl/stagexl.dart';
 
 part 'src/gameboard.dart';
 part 'src/products.dart';
+part 'src/scoreboard.dart'; 
 
 Stage stage;
 
@@ -56,10 +57,11 @@ void loadResources() {
   
   var resourceManager = new ResourceManager();  
   
-  // Balloon images - CC-BY 3.0 - http://opengameart.org/content/blocks-set-01
-  for(int i=1; i<8; ++i) {
+  // Images - CC-BY 3.0 - http://opengameart.org/content/platformer-food-pack
+  for(int i=1; i<6; ++i) {
+    print("${i}");
     resourceManager
-      ..addBitmapData("product_$i", "../common/images/products/Blocks_01_64x64_Alt_00_00${i}.png");
+      ..addBitmapData("product_$i", "../common/images/products/fruit_${i}.png");
   }
   
   resourceManager.load().then((res) {

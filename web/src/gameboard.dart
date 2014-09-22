@@ -39,6 +39,7 @@ class GameBoard extends DisplayObjectContainer {
   int dropping_products = 0;
   int implodding_count = 0;
   var _rng  = new math.Random();
+  //ScoreBoard _scoreboard;
   
   GameBoard(ResourceManager resourceManager, Juggler juggler) {
     _resourceManager = resourceManager;
@@ -47,13 +48,15 @@ class GameBoard extends DisplayObjectContainer {
         false, Color.BlanchedAlmond);
     var backgroundBitmap = new Bitmap(background);
     addChild(backgroundBitmap);
+    //_scoreboard = new ScoreBoard(_resourceManager,  10);
+    //addChild(_scoreboard);
 
     // Fill game board with random products
     // Loop until we generate a board with no initial imploding products
     while(true) {
       for(int x=0; x < GRID_ROWS; ++x) {
         for(int y=0; y < GRID_COLS; ++y) {
-          int face_id = 1 + _rng.nextInt(7);
+          int face_id = 1 + _rng.nextInt(5);
           BitmapData bitmap = resourceManager.getBitmapData('product_$face_id');
           Product product = new Product(bitmap,face_id)
            ..x = x*GRID_WIDTH
@@ -216,7 +219,7 @@ class GameBoard extends DisplayObjectContainer {
       // Drop from the top - animation time depends on how many cols to drop      
       for(int i=0; i<col_drop_count; ++i) {
         ++dropping_products;
-        int face_id = 1 + _rng.nextInt(7);
+        int face_id = 1 + _rng.nextInt(5);
         Product product = new Product(_resourceManager.getBitmapData('product_$face_id'),face_id)
           ..x = x*GRID_WIDTH
           ..y = -(i+1)*GRID_HEIGHT;

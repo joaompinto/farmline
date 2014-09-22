@@ -9,6 +9,7 @@ class Product extends Bitmap implements Animatable {
     }
 
     bool advanceTime(num time) {
+      return true;
       // Nothing specal
     }
 }
